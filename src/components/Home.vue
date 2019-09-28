@@ -4,7 +4,7 @@
 
 <script>
 export default {
-  name:'wraper',
+  name:'home',
   components:{},
   props:{},
   data(){
@@ -20,6 +20,7 @@ export default {
 </script>
 <style lang="scss" scoped>
 .home{
-    background: red;
+    background: green;
+    font-size:26px;
 }
 </style>
