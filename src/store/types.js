@@ -1,0 +1,3 @@
+export const INCRE_COUNT="INCRE_COUNT";
+export const DECRE_COUNT="DECRE_COUNT";
+export const CHANGE_MESSAGE="CHANGE_MESSAGE"
