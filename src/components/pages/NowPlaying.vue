@@ -49,7 +49,7 @@ export default {
     ...mapActions(['get_nowPlaying','get_location']),
     ...mapMutations(['CHOOSE_CITYLIST']),
     seekDetail(id){
-      console.log(id);
+      this.$router.push(`/movie/detail/${id}`)
     },
     scrolling(pos){
       if(pos.y>30){

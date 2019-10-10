@@ -6,3 +6,4 @@ export const reqComingPlaying=(id)=>request(`/api/movieComingList?cityId=${id}`,
 export const reqSearchList=(id,kw)=>request(`/api/searchList?cityId=${id}&kw=${kw}`,{},'get');
 export const reqCinemaList=(id,kw)=>request(`/api/cinemaList?cityId=${id}`,{},'get');
 export const reqLocation=()=>request(`/api/getLocation`,{},'get');
+export const reqMovieDetail=(id)=>request(`/api/detailmovie?movieId=${id}`,{},'get');

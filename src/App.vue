@@ -1,8 +1,10 @@
 <template>
   <div id="app">
-    <keep-alive>
-        <router-view/>
-    </keep-alive>
+    <transition name="bound">
+        <keep-alive>
+          <router-view/>
+        </keep-alive>
+    </transition>
   </div>
 </template>
 
@@ -25,6 +27,12 @@ export default {
       height: calc(100% - 5.5rem);
       overflow-y: scroll;
     }
+  }
+  .bound-enter-active,.bound-leave-active{
+    transition: all .5s;
+  }
+  .bound-enter,.bound-leave-active{
+    transform: translateX(90%) skewY(30deg);
   }
 
 </style>

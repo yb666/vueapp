@@ -5,7 +5,8 @@ import {
     GET_COMINGLAYING,
     GET_SEARCHLIST,
     GET_CINEMALIST,
-    GET_LOCATION
+    GET_LOCATION,
+    GET_MOVIEDETAIL
 } from './types';
 
 export default{
@@ -31,6 +32,10 @@ export default{
     },
     [GET_LOCATION](state,city){
         state.localCity=city
+    },
+    [GET_MOVIEDETAIL](state,movieDetail){
+        state.movieDetail=movieDetail
     }
+    
     
 }

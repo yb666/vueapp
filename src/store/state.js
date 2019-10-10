@@ -8,5 +8,6 @@ export default{
     comingPlayingList:[],
     searchList:[],
     cinemaList:[],
-    localCity:JSON.parse(localStorage.getItem('localCity')) || {}
+    localCity:JSON.parse(localStorage.getItem('localCity')) || {},
+    movieDetail:{}
 }

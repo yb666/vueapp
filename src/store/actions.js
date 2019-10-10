@@ -4,7 +4,8 @@ import {
     GET_COMINGLAYING,
     GET_SEARCHLIST,
     GET_CINEMALIST,
-    GET_LOCATION
+    GET_LOCATION,
+    GET_MOVIEDETAIL
 } from './types';
 
 import {
@@ -13,7 +14,8 @@ import {
     reqComingPlaying,
     reqSearchList,
     reqCinemaList,
-    reqLocation
+    reqLocation,
+    reqMovieDetail
 } from '../api';
 
 export default{
@@ -78,7 +80,13 @@ export default{
             let local_city=JSON.parse(localStorage.getItem('localCity'));
             commit(GET_LOCATION,local_city)
             callBack()
-            
+        }
+    },
+    async get_movieDetail({commit},id){
+        const res=await reqMovieDetail(id);
+        if(res.status==200){
+            const movie=res.data.data.detailMovie;
+            commit(GET_MOVIEDETAIL,movie)
         }
     }
 }

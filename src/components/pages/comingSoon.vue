@@ -10,7 +10,7 @@
     >
         <ul class="soon-list">
           <li v-for="(item,index) in comingPlayingList" :key="index">
-            <div class="pic-show"><img :src="item.img | setWh('128.180')" alt="" /></div>
+            <div class="pic-show" @click="seekDetail(item.id)"><img :src="item.img | setWh('128.180')" alt="" /></div>
             <div class="info-list">
               <h2>{{item.nm}}</h2>
               <p><span class="person">{{item.wish}}</span></p>
@@ -46,6 +46,9 @@ export default {
   },
   methods:{
     ...mapActions(['get_comingPlaying']),
+    seekDetail(id){
+      this.$router.push(`/movie/detail/${id}`)
+    },
      scrolling(pos){
       if(pos.y>30){
         this.pullDownMsg="更新中...";

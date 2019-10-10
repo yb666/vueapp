@@ -54,3 +54,6 @@ input{
     padding-top: 2.5rem;
     box-sizing: border-box;
 }
+.swiper-pagination-bullet{
+    opacity: .6!important;
+}

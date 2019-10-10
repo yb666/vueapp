@@ -33,6 +33,15 @@ export default new Router({
           component: ()=>import("@/components/pages/Search.vue")
         },
         {
+          path: 'detail/:movieId',
+          components: {
+            detail:()=>import("@/components/pages/MovieDetail.vue")
+          },
+          props:{
+            detail:true
+          }
+        },
+        {
           path:'/movie',
           redirect:'/movie/nowPlaying',
           component: ()=>import("@/components/pages/NowPlaying.vue")

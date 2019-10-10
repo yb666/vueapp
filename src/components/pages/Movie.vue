@@ -16,12 +16,17 @@
           </router-link>
         </div>
         <div class="content-container">
-          <keep-alive>
-              <router-view/>
-          </keep-alive>
+            <transition name="slide">
+              <keep-alive>
+                <router-view/>
+                </keep-alive>
+            </transition>
         </div>
     </div>
     <Footers/>
+    <transition name="slide">
+        <router-view name="detail"/>
+    </transition>
   </div>
 </template>
 
@@ -132,6 +137,11 @@ export default {
   .content-container{
     height:100%;
   }
-  
+ }
+ .slide-enter-active, .slide-leave-active{
+   transition:all .5s;
+ }
+ .slide-enter,.slide-leave-active{
+   transform: translate(50% ,-50%) rotateZ(-30deg);
  }
 </style>
