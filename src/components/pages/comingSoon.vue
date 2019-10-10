@@ -1,99 +1,92 @@
 <template>
   <div class="comeSoon">
-    <ul class="soon-list">
-      <li>
-        <div class="pic-show"><img src="../../assets/images/wmzb.png" alt="" /></div>
-        <div class="info-list">
-          <h2>无名之辈</h2>
-          <p><span class="person">17746</span></p>
-          <p>主演：陈建斌，任素汐，潘斌龙</p>
-          <p>2018-11-30上映</p>
-        </div>
-        <div class="btn_pre">预售</div>
-      </li>
-      <li>
-        <div class="pic-show"><img src="../../assets/images/txwz.png" alt="" /></div>
-        <div class="info-list">
-          <h2>天下无贼</h2>
-          <p><span class="person">18946</span></p>
-          <p>主演：刘德华，刘若英，王宝强</p>
-          <p>2001-05-01</p>
-        </div>
-        <div class="btn_pre">预售</div>
-      </li>
-      <li>
-        <div class="pic-show"><img src="../../assets/images/wmzb.png" alt="" /></div>
-        <div class="info-list">
-          <h2>无名之辈</h2>
-          <p><span class="person">17746</span></p>
-          <p>主演：陈建斌，任素汐，潘斌龙</p>
-          <p>2018-11-30上映</p>
-        </div>
-        <div class="btn_pre">预售</div>
-      </li>
-      <li>
-        <div class="pic-show"><img src="../../assets/images/txwz.png" alt="" /></div>
-        <div class="info-list">
-          <h2>天下无贼</h2>
-          <p><span class="person">18946</span></p>
-          <p>主演：刘德华，刘若英，王宝强</p>
-          <p>2001-05-01</p>
-        </div>
-        <div class="btn_pre">预售</div>
-      </li>
-      <li>
-        <div class="pic-show"><img src="../../assets/images/wmzb.png" alt="" /></div>
-        <div class="info-list">
-          <h2>无名之辈</h2>
-          <p><span class="person">17746</span></p>
-          <p>主演：陈建斌，任素汐，潘斌龙</p>
-          <p>2018-11-30上映</p>
-        </div>
-        <div class="btn_pre">预售</div>
-      </li>
-      <li>
-        <div class="pic-show"><img src="../../assets/images/txwz.png" alt="" /></div>
-        <div class="info-list">
-          <h2>天下无贼</h2>
-          <p><span class="person">18946</span></p>
-          <p>主演：刘德华，刘若英，王宝强</p>
-          <p>2001-05-01</p>
-        </div>
-        <div class="btn_pre">预售</div>
-      </li>
-    </ul>
-  </div>
+    <Loading v-show="isLoading"/>
+    <Scroller 
+      :pullDownMsg="pullDownMsg" 
+      :pullUpMsg="pullUpMsg" 
+      @scrolling="scrolling" 
+      @touchEnded="touchEnded"
+      v-show="!isLoading"
+    >
+        <ul class="soon-list">
+          <li v-for="(item,index) in comingPlayingList" :key="index">
+            <div class="pic-show"><img :src="item.img | setWh('128.180')" alt="" /></div>
+            <div class="info-list">
+              <h2>{{item.nm}}</h2>
+              <p><span class="person">{{item.wish}}</span></p>
+              <p>主演：{{ item.star}}</p>
+              <p>{{item.rt}}上映</p>
+            </div>
+            <div class="btn_pre">预售</div>
+          </li>
+        </ul>
+      </Scroller>
+    </div>
 </template>
 
 <script>
+import {mapActions,mapState} from 'vuex';
+import Scroller from "@/components/common/Scroller.vue";
+
 export default {
   name:'comeSoon',
-  components:{},
-  props:{},
   data(){
     return {
+      pullDownMsg:"",
+      pullUpMsg:"",
+      isLoading:true,
+      prevCityId:-1
     }
   },
-  watch:{},
-  computed:{},
-  methods:{},
-  created(){},
-  mounted(){}
+  components:{
+    Scroller
+  },
+  computed:{
+    ...mapState(['comingPlayingList','curCity'])
+  },
+  methods:{
+    ...mapActions(['get_comingPlaying']),
+     scrolling(pos){
+      if(pos.y>30){
+        this.pullDownMsg="更新中...";
+      }
+    },
+    touchEnded(pos){
+      if(pos.y>30){
+        setTimeout(()=>{
+          this.pullDownMsg="更新成功";
+          setTimeout(()=>{
+            this.pullDownMsg="";
+          },500)
+        },500)
+      }
+    }
+  },
+  activated(){
+    if(this.prevCityId!==this.curCity.id){
+        this.get_comingPlaying(()=>{
+        this.isLoading=false;
+        this.prevCityId=this.curCity.id;
+      });
+    }
+  }
 }
 </script>
 <style lang="scss" scoped>
 .comeSoon{
   display: flex;
-  padding: .5rem .5rem 0rem .5rem;
-  box-sizing: border-box;
+  position: relative;
+  height: 100%;
   .soon-list{
     flex: 1;
+    padding: .5rem;
+    padding-bottom: 0;
      li{
        display: flex;
        align-items: center;
        border-bottom: 1px solid #e6e6e6;
        padding-bottom:.5rem;
-       margin-top: .6rem;
+       margin-bottom: .6rem;
        .pic-show{
          width: 3.2rem;
          height: 4.5rem;

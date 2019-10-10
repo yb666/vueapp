@@ -4,7 +4,7 @@
     <div class="content">
         <div class="content-menu">
           <router-link tag="div" to="/movie/city" class="city-name">
-            <span class="city">成都</span>
+            <span class="city">{{curCity.nm}}</span>
             <i class="triangle"></i>
           </router-link>
           <div class="hot-search">
@@ -29,7 +29,7 @@
 import {mapMutations,mapActions,mapState} from 'vuex'
 import Headers from '@/components/common/Headers.vue'
 import Footers from '@/components/common/Footers.vue'
-
+import { messageBox } from '../tools';
 
 export default {
   name:'Movie',
@@ -38,20 +38,39 @@ export default {
       title:"喵喵电影"
     }
   },
-  computed:{},
+  computed:{
+    ...mapState(['curCity','localCity'])
+  },
   methods:{
-   
+    ...mapActions(['get_location']),
+    ...mapMutations(['CHOOSE_CITYLIST'])
   },
   components:{
     Footers,
     Headers
   },
-  created(){},
-  mounted(){}
+  activated(){
+    let curCity_id=this.curCity.nm;
+    let localCity_id=this.localCity.nm;
+    if(curCity_id!==localCity_id){
+      this.get_location(()=>{
+        messageBox({
+          title:"定位",
+          content:this.localCity.nm,
+          cancel:"取消",
+          ok:"确定",
+          handleOk:()=>{
+            this.CHOOSE_CITYLIST(this.localCity)
+          }
+        })
+      })
+    }
+  }
 }
 </script>
 <style lang="scss" scoped>
  .movie{
+   height: 100%;
    .content-menu{
      display: flex;
      height: 2.5rem;
@@ -110,7 +129,9 @@ export default {
         }
      }
    }
-  
+  .content-container{
+    height:100%;
+  }
   
  }
 </style>

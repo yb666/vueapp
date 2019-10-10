@@ -1,98 +1,117 @@
 <template>
   <div class="playing">
-    <ul class="play-list">
-      <li>
-        <div class="pic-show"><img src="../../assets/images/wmzb.png" alt="" /></div>
-        <div class="info-list">
-          <h2>无名之辈</h2>
-          <p>观众评<span class="grade">9.2</span></p>
-          <p>主演：陈建斌，任素汐，潘斌龙</p>
-          <p>今天55家影院放映600场</p>
-        </div>
-        <div class="btn_mall">购票</div>
-      </li>
-      <li>
-        <div class="pic-show"><img src="../../assets/images/txwz.png" alt="" /></div>
-        <div class="info-list">
-          <h2>天下无贼</h2>
-          <p>观众评<span class="grade">9.8</span></p>
-          <p>主演：刘德华，刘若英，王宝强</p>
-          <p>今天88家影院放映1600场</p>
-        </div>
-        <div class="btn_mall">购票</div>
-      </li>
-      <li>
-        <div class="pic-show"><img src="../../assets/images/wmzb.png" alt="" /></div>
-        <div class="info-list">
-          <h2>无名之辈</h2>
-          <p>观众评<span class="grade">9.2</span></p>
-          <p>主演：陈建斌，任素汐，潘斌龙</p>
-          <p>今天55家影院放映600场</p>
-        </div>
-        <div class="btn_mall">购票</div>
-      </li>
-      <li>
-        <div class="pic-show"><img src="../../assets/images/txwz.png" alt="" /></div>
-        <div class="info-list">
-          <h2>天下无贼</h2>
-          <p>观众评<span class="grade">9.8</span></p>
-          <p>主演：刘德华，刘若英，王宝强</p>
-          <p>今天88家影院放映1600场</p>
-        </div>
-        <div class="btn_mall">购票</div>
-      </li>
-      <li>
-        <div class="pic-show"><img src="../../assets/images/wmzb.png" alt="" /></div>
-        <div class="info-list">
-          <h2>无名之辈</h2>
-          <p>观众评<span class="grade">9.2</span></p>
-          <p>主演：陈建斌，任素汐，潘斌龙</p>
-          <p>今天55家影院放映600场</p>
-        </div>
-        <div class="btn_mall">购票</div>
-      </li>
-      <li>
-        <div class="pic-show"><img src="../../assets/images/txwz.png" alt="" /></div>
-        <div class="info-list">
-          <h2>天下无贼</h2>
-          <p>观众评<span class="grade">9.8</span></p>
-          <p>主演：刘德华，刘若英，王宝强</p>
-          <p>今天88家影院放映1600场</p>
-        </div>
-        <div class="btn_mall">购票</div>
-      </li>
-    </ul>
+    <Loading v-show="isLoading"/>
+    <Scroller 
+      :pullDownMsg="pullDownMsg" 
+      :pullUpMsg="pullUpMsg"
+      @scrolling="scrolling"
+      @touchEnded="touchEnded"
+      v-show="!isLoading"
+    >
+      <ul class="play-list">
+        <li v-for="(item,index) in nowPlayingList" :key="index">
+          <div class="pic-show" @tap="seekDetail(item.id)"><img :src="item.img | setWh('128.180')" alt="" /></div>
+          <div class="info-list">
+            <h2>{{item.nm}}</h2>
+            <p>观众评<span class="grade">{{item.sc}}</span></p>
+            <p>主演：{{item.star}}</p>
+            <p>{{item.showInfo}}</p>
+          </div>
+          <div class="btn_mall">购票</div>
+        </li>
+      </ul>
+    </Scroller>
   </div>
 </template>
 
 <script>
+import {mapActions,mapState,mapMutations} from 'vuex';
+import Scroller from "@/components/common/Scroller.vue";
+import { messageBox } from '../tools';
+
 export default {
   name:'playing',
-  components:{},
-  props:{},
   data(){
     return {
+      pullDownMsg:"",
+      pullUpMsg:"",
+      isLoading:true,
+      prevCityId:-1
     }
-  }, 
-  computed:{},
-  methods:{},
-  created(){},
-  mounted(){}
+  },
+  components:{
+    Scroller
+  },
+  computed:{
+    ...mapState(['nowPlayingList','curCity','localCity'])
+  },
+  methods:{
+    ...mapActions(['get_nowPlaying','get_location']),
+    ...mapMutations(['CHOOSE_CITYLIST']),
+    seekDetail(id){
+      console.log(id);
+    },
+    scrolling(pos){
+      if(pos.y>30){
+        this.pullDownMsg="更新中...";
+      }
+    },
+    touchEnded(pos){
+      if(pos.y>30){
+        setTimeout(()=>{
+          this.pullDownMsg="更新成功";
+          setTimeout(()=>{
+            this.pullDownMsg="";
+          },500)
+        },500)
+      }
+    }
+  },
+  activated(){
+     let curCity_id=this.curCity.nm;
+    let localCity_id=this.localCity.nm;
+    if(this.prevCityId!==this.curCity.id){
+        this.get_nowPlaying(()=>{
+        this.isLoading=false;
+        this.prevCityId=this.curCity.id;
+      });
+    }
+   
+    if(curCity_id!==localCity_id){
+      this.get_location(()=>{
+        messageBox({
+          title:"定位",
+          content:this.localCity.nm,
+          cancel:"取消",
+          ok:"确定",
+          handleOk:()=>{
+            this.CHOOSE_CITYLIST(this.localCity)
+          }
+        })
+      })
+    }
+
+
+  },
+  mounted(){
+  }
 }
 </script>
 <style lang="scss" scoped>
 .playing{
   display: flex;
-  padding: .5rem .5rem 0rem .5rem;
-  box-sizing: border-box;
+  position: relative;
+  height: 100%;
   .play-list{
     flex: 1;
+    padding: .5rem;
+    padding-bottom: 0;
      li{
        display: flex;
        align-items: center;
        border-bottom: 1px solid #e6e6e6;
        padding-bottom:.5rem;
-       margin-top: .6rem;
+       margin-bottom: .6rem;
        .pic-show{
          width: 3.2rem;
          height: 4.5rem;

@@ -1,13 +1,36 @@
-import {INCRE_COUNT,DECRE_COUNT,CHANGE_MESSAGE} from './types';
+import {
+    GET_CITYLIST,
+    CHOOSE_CITYLIST,
+    GET_NOWPLAYING,
+    GET_COMINGLAYING,
+    GET_SEARCHLIST,
+    GET_CINEMALIST,
+    GET_LOCATION
+} from './types';
 
 export default{
-    [INCRE_COUNT](state,num){
-        state.count+=num
+    [GET_CITYLIST](state,{citys}){
+        state.cityList=citys
     },
-    [DECRE_COUNT](state,num){
-        state.count-=num;
+    [CHOOSE_CITYLIST](state,city){
+        localStorage.setItem('curCity',JSON.stringify(city))
+        let curCity=JSON.parse(localStorage.getItem('curCity'));
+        state.curCity=curCity
     },
-    [CHANGE_MESSAGE](state){
-        state.message="hello mutations"
+    [GET_NOWPLAYING](state,{nowPlayings}){
+        state.nowPlayingList=nowPlayings
+    },
+    [GET_COMINGLAYING](state,{comingPlayings}){
+        state.comingPlayingList=comingPlayings
+    },
+    [GET_SEARCHLIST](state,{searchList}){
+        state.searchList=searchList
+    },
+    [GET_CINEMALIST](state,{cinemaList}){
+        state.cinemaList=cinemaList
+    },
+    [GET_LOCATION](state,city){
+        state.localCity=city
     }
+    
 }

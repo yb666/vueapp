@@ -16,7 +16,9 @@
             <span class="triangle"></span>
           </div>
         </div>
-        <clist/>
+        <div class="cinema_content">
+          <clist :cinemaList="cinemaList" :isLoading="isLoading"/>
+        </div>
     </div>
     <Footers/>
     
@@ -27,11 +29,14 @@
 import Headers from '@/components/common/Headers.vue'
 import Footers from '@/components/common/Footers.vue'
 import Clist from '@/components/pages/Clist.vue'
+import {mapActions,mapState} from 'vuex'
 export default {
   name:'cinema',
   data(){
     return {
-      title:"热门影院"
+      title:"热门影院",
+      isLoading:true,
+      preCityId:-1
     }
   },
   components:{
@@ -39,9 +44,21 @@ export default {
     Headers,
     Clist
   },
-  computed:{},
-  methods:{},
-  created(){},
+  computed:{
+    ...mapState(['cinemaList','curCity'])
+  },
+  methods:{
+    ...mapActions(['get_cinemaList'])
+  },
+  activated(){
+    if(this.preCityId!==this.curCity.id){
+        this.get_cinemaList(()=>{
+        this.isLoading=false;
+        this.preCityId=this.curCity.id;
+      });
+    }
+    
+  },
   mounted(){}
 }
 </script>
@@ -55,6 +72,9 @@ export default {
     justify-content: space-around;
     align-items: center;
     background: #fff;
+    position: fixed;
+    width: 100%;
+    left: 0;
     div{
       position: relative;
       .tags{
@@ -69,6 +89,11 @@ export default {
       }
     }
     
+  }
+  .cinema_content{
+    padding-top: 2.25rem;
+    box-sizing: border-box;
+    height: 100%;
   }
 }
 </style>

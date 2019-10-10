@@ -13,6 +13,21 @@ rem(document,window);
 
 Vue.config.productionTip = false;
 
+/**
+ * 引入loading全局组件
+ */
+ 
+import Loading from '@/components/common/Loading.vue';
+
+Vue.component('Loading',Loading);
+
+
+//图片全局处理过滤器
+
+Vue.filter('setWh',(url,arg)=>{
+  return url.replace(/w\.h/,arg)
+})
+
 /* eslint-disable no-new */
 new Vue({
   el: '#app',

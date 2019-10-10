@@ -19,8 +19,11 @@ export default {
   #app{
     height: 100%;
     .content{
-      padding-top:2.5rem;
-      padding-bottom: 3.2rem;
+      position: fixed;
+      width: 100%;
+      top:2.5rem;
+      height: calc(100% - 5.5rem);
+      overflow-y: scroll;
     }
   }
 
